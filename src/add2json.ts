@@ -15,14 +15,16 @@ export function Add2json(vocabularyList: null | Array<{ word: string; pron: stri
     // Read existing vocabulary from the file
     let existingVocabulary = readExistingVocabulary(vocab_path);
 
-    // Create a set of existing words for quick lookup
-    const existingWords = new Set(existingVocabulary.map((item: { word: string; }) => item.word));
+    // Create a map of existing words to their corresponding entries
+    const vocabularyMap = new Map(existingVocabulary.map((item: { word: string; pron: string; tr: string; read: boolean; readDateTime: string; latestPracticeDate: string }) => [item.word, item]));
 
-    // Filter out words that already exist
-    const newVocabulary = (vocabularyList || []).filter(item => !existingWords.has(item.word));
+    // Add or update entries in the map
+    (vocabularyList || []).forEach(item => {
+        vocabularyMap.set(item.word, item);
+    });
 
-    // Combine existing vocabulary with new vocabulary
-    const combinedVocabulary = existingVocabulary.concat(newVocabulary);
+    // Convert the map back to an array
+    const combinedVocabulary = Array.from(vocabularyMap.values());
 
     // Convert the combined list to a JSON string
     const jsonContent = JSON.stringify(combinedVocabulary, null, 2);
@@ -33,6 +35,5 @@ export function Add2json(vocabularyList: null | Array<{ word: string; pron: stri
             console.log('An error occurred while writing JSON to file.');
             return console.log(err);
         }
-        console.log('JSON file has been updated.');
     });
 }
