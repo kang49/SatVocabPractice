@@ -44,20 +44,21 @@ export function AddPron(vocab_path: string) {
     // Filter vocabularies where read is false and limit to `value`
     const filteredVocabularies = vocabularies.filter(vocab => vocab.read && !vocab.pron);
         
-        if (filteredVocabularies) {
-        filteredVocabularies.forEach(async vocab => {
-            const pron_ans = await askvocab(`"${vocab.word}" : `);
+    if (filteredVocabularies.length > 0) {
+        (async () => {
+            for (const vocab of filteredVocabularies) {
+                const pron_ans = await askvocab(`"${vocab.word}" : `);
 
-            vocab.pron = pron_ans;
+                vocab.pron = pron_ans;
 
-            // Save updated vocabularies back to the JSON file (if needed)
-            const updatedData = JSON.stringify(vocabularies, null, 2);
-            fs.writeFileSync(vocab_path, updatedData, 'utf8');
-
-            return;
-        })
+                // Save updated vocabularies back to the JSON file (if needed)
+                const updatedData = JSON.stringify(vocabularies, null, 2);
+                fs.writeFileSync(vocab_path, updatedData, 'utf8');
+            }
+            rl.close(); // Close readline interface after processing
+        })();
     } else {
-        console.log('No any vocab need pron.')
+        console.log('No any vocab need pron.');
+        rl.close(); // Close readline interface if no vocab needs pron
     }
-
 }

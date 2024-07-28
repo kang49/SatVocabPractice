@@ -131,3 +131,4 @@ dist
 /myenv
 yarn.lock
 .DS_Store
+db/

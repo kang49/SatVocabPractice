@@ -6,7 +6,7 @@ import { Man_addvocab } from './manual_vocabPush';
 import { RandomVocab } from './random_vocab';
 import { ReadToday } from './readToday';
 import { AddPron } from './add_pron';
-import { Random_Practice, Today_Practice } from './practice';
+import { IncorrectedPractice, Random_Practice, Today_Practice } from './practice';
 import { ShowStats } from './statsShow';
 
 // Create an interface for readline
@@ -44,9 +44,10 @@ async function askWindow() {
     } else if (pages1 === 'auto-add') {
         Auto_addvocab();
     } else if (pages1 === 'pron-add') {
+        rl.close();
         AddPron('vocabs/vocabs.json');
     } else if (pages1 === 'practice') {
-        const pages2_menulist: string[] = ['random', 'today'];
+        const pages2_menulist: string[] = ['random', 'today', 'incor'];
         console.table(pages2_menulist);
         const pages2 = await askvocab(": ");
         if (pages2 === 'random') {
@@ -57,6 +58,9 @@ async function askWindow() {
         } else if (pages2 === 'today') {
             rl.close();
             Today_Practice('vocabs/vocabs.json');
+        } else if (pages2 === 'incor') {
+            rl.close();
+            IncorrectedPractice('vocabs/vocabs.json', 'db/practiceLog.json');
         }
     } else if (pages1 === 'stats') {
         rl.close();

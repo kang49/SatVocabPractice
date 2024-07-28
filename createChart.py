@@ -37,8 +37,9 @@ ax1.set_xticks(index + bar_width / 2)
 ax1.set_xticklabels(dates)
 ax1.legend()
 
-# Calculate incorrect rate for file 2 and sort
-data2_sorted = sorted(data2, key=lambda x: x["incorrectPractice_count"] / x["totalPractice_count"], reverse=True)
+# Calculate incorrect rate for file 2 and sort, filtering out zero values
+data2_filtered = [entry for entry in data2 if entry["incorrectPractice_count"] > 0 and entry["totalPractice_count"] > 0]
+data2_sorted = sorted(data2_filtered, key=lambda x: x["incorrectPractice_count"] / x["totalPractice_count"], reverse=True)
 words = [entry["word"] for entry in data2_sorted]
 incorrect_rates = [(entry["incorrectPractice_count"] / entry["totalPractice_count"]) for entry in data2_sorted]
 
