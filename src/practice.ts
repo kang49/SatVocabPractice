@@ -19,7 +19,7 @@ interface PracticeLog {
 }
 
 async function AnsChecker(vocab: string, pron: string, translate: string, askEngine: Function) {
-    while(true) {
+    while (true) {
         const answer: string = await askEngine(`Are you correct in "${vocab}"? (y/n/ans) : `);
 
         if (answer === 'y') {
@@ -85,13 +85,13 @@ export async function Random_Practice(vocab_path: string, practice_value: number
 
     shuffleArray(filteredVocabularies);
     const limitedVocabularies = filteredVocabularies.slice(0, practice_value);
-    
+
     for (const vocab of limitedVocabularies) {
         const today = new Date();
         const dateStr = today.toISOString().split('T')[0];
 
         const ansResult = await AnsChecker(vocab.word, vocab.pron, vocab.tr, askvocab);
-        
+
         if (ansResult !== undefined) {
             vocab.latestPracticeDate = dateStr;
             AddStats(vocab.word, ansResult);
@@ -127,7 +127,7 @@ export async function Today_Practice(vocab_path: string) {
 
     for (const vocab of filteredVocabularies) {
         const ansResult = await AnsChecker(vocab.word, vocab.pron, vocab.tr, askvocab);
-        
+
         if (ansResult !== undefined) {
             vocab.latestPracticeDate = dateStr;
             AddStats(vocab.word, ansResult);
@@ -180,10 +180,9 @@ export async function IncorrectedPractice(vocab_path: string, practiceLog_path: 
             vocab.latestPracticeDate = dateStr;
             AddStats(vocab.word, ansResult);
         }
+        // Save updated vocabularies
+        writeJson(vocab_path, vocabularies);
     }
-
-    // Save updated vocabularies
-    writeJson(vocab_path, vocabularies);
 
     rl.close();
 }
